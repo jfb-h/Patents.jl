@@ -3,6 +3,14 @@ uuid = "d01f8802-a735-4783-851a-d2cff8aa012a"
 authors = ["Jakob Hoffmann"]
 version = "0.1.0"
 
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+ZipFile = "a5390f91-8eb1-5f08-bee0-b1d1ffed6cea"
+
 [compat]
 julia = "1.5"
 
