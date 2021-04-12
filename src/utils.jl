@@ -16,7 +16,7 @@ function download_classification(version="202102")
     isdir(versiondir) || mkdir(versiondir)
     link = "https://www.cooperativepatentclassification.org/cpc/bulk/CPCTitleList" * version * ".zip"
     isfile(joinpath(versiondir, "titles.zip")) && @warn "File exists, overwriting..."
-    file = download(link)
+    download(link, joinpath(versiondir, "titles.zip"))
 end
 
 # TODO: In general, it would be better to use the XML data instead of txt. This also has additional info.
