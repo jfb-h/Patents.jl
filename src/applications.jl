@@ -5,7 +5,7 @@ mutable struct NPLCitation
     num::Int64
     text::String
     external_ids::Vector{String}
-    NPLCitation() = new(0, "", "", String[])
+    NPLCitation() = new("", 0, "", String[])
 end
 
 mutable struct Title
