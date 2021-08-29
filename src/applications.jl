@@ -1,19 +1,135 @@
-struct Application
-    id::Int
-    filingdate::Date
-    title::String
-    abstract::String
-    symbols::Vector{SymbolCPC}
-    applicants::Vector{Applicant}
-    granted::Bool
+using Dates
+
+mutable struct NPLCitation
+    id::String
+    num::Int64
+    text::String
+    external_ids::Vector{String}
+    NPLCitation() = new(0, "", "", String[])
 end
 
-Base.show(io::IO, a::Application) = print(io, "Application $(a.id) | Title: $(first(a.title, 50))" )
+mutable struct Title
+    text::String
+    lang::String
+    Title() = new("", "")
+end
 
-id(app::Application) = app.id
-title(app::Application) = app.title
-abstract(app::Application) = app.abstract
-symbols(app::Application) = app.symbols
-applicants(app::Application) = app.applicants
-granted(app::Application) = app.granted
+mutable struct Abstract
+    text::String
+    lang::String
+    Abstract() = new("", "")
+end
 
+lang(t::Title) = t.lang
+text(t::Title) = t.text
+
+lang(t::Abstract) = t.lang
+text(t::Abstract) = t.text
+
+mutable struct Classification
+    symbol::String
+    title::String
+    Classification() = new("", "")
+end
+
+code(c::Classification) = c.symbol
+subgroup(c::Classification) = code(c)
+maingroup(c::Classification) = match(r"[^/]*", code(c)).match
+subclass(c::Classification) = first(code(c), 4)
+class(c::Classification) = first(code(c), 3)
+section(c::Classification) = first(code(c), 1)
+
+==(c1::Classification, c2::Classification) = code(c1) == code(c2)
+hash(class::Classification, h::UInt) = hash(code(class), h)
+
+
+mutable struct ApplicationID
+    source::String
+    id::String
+    jurisdiction::String
+    doc_number::String
+    kind::String
+    date::Date
+    ApplicationID() = new("", "", "", "", "", Date(9999))
+    ApplicationID(s, i, j, d, k ,dt) = new(s, i, j, d, k, dt)
+end
+
+source(a::ApplicationID) = a.source
+id(a::ApplicationID) = a.id
+jurisdiction(a::ApplicationID) = a.jurisdiction
+docnr(a::ApplicationID) = a.doc_number
+kind(a::ApplicationID) = a.kind
+date(a::ApplicationID) = a.date
+
+==(a1::ApplicationID, a2::ApplicationID) = id(a1) == id(a2)
+hash(app::ApplicationID, h::UInt) = hash(id(app), h)
+
+mutable struct Application
+    id::ApplicationID
+    publication_type::String
+    inventors::Vector{String}
+    applicants::Vector{String}
+    title::Vector{Title}
+    abstract::Vector{Abstract}
+    cpc::Vector{Classification}
+    siblings_simple::Vector{ApplicationID}
+    cites_patents::Vector{ApplicationID}
+    cites_npl::Vector{NPLCitation}
+    cited_by::Vector{ApplicationID}
+    family_size::Int
+    cites_patents_count::Int
+    cites_npl_count::Int
+    cited_by_count::Int
+    Application() = new(ApplicationID(), "", [""], [""], Title[], Abstract[], 
+                        Classification[], ApplicationID[], ApplicationID[], 
+                        NPLCitation[], ApplicationID[], 0, 0, 0, 0)
+    
+    Application(id, typ, inv, app, tit, abs, cpc, fam, cit, npl, 
+                citby, fsize, citcount, citcountnpl, citbycount) = begin
+        
+        new(id, typ, inv, app, tit, abs, cpc, fam, cit, npl, 
+            citby, fsize, citcount, citcountnpl, citbycount
+        )
+    end
+end
+
+id(a::Application) = id(a.id)
+jurisdiction(a::Application) = jurisdiction(a.id)
+docnr(a::Application) = docnr(a.id)
+kind(a::Application) = kind(a.id)
+date(a::Application) = date(a.id)
+status(a::Application) = a.publication_type
+
+title(a::Application) = a.title
+abstract(a::Application) = a.abstract
+
+inventors(a::Application) = a.inventors
+applicants(a::Application) = a.applicants
+
+siblings(a::Application) = a.siblings_simple
+familysize(a::Application) = a.family_size
+
+classification(a::Application) = a.cpc
+
+cites(a::Application) = a.cites_patents
+cites_npl(a::Application) = a.cites_npl
+cites_count(a::Application) = a.cites_patents_count
+cites_count_npl(a::Application) = a.cites_npl_count
+
+citedby(a::Application) = a.cited_by
+citedby_count(a::Application) = a.cited_by_count
+
+==(a1::Application, a2::Application) = id(a1) == id(a2)
+hash(app::Application, h::UInt) = hash(id(app), h)
+
+
+function Base.show(io::IO, a::ApplicationID) 
+    print(io, "$(id(a)) | $(date(a)) | $(jurisdiction(a) * docnr(a) * kind(a))" )
+end
+
+function Base.show(io::IO, a::Application) 
+    print(io, "$(id(a)) | $(date(a)) | $(jurisdiction(a) * docnr(a) * kind(a))" )
+end
+
+Base.show(io::IO, t::Title) = print(io, "$(text(t))" )
+Base.show(io::IO, a::Abstract) = print(io, "$(text(a))" )

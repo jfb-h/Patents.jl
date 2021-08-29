@@ -4,12 +4,13 @@ authors = ["Jakob Hoffmann"]
 version = "0.1.0"
 
 [deps]
-CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
-EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
 LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+NamedArrays = "86f7a689-2022-50b4-a561-43c23ac3c673"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-ZipFile = "a5390f91-8eb1-5f08-bee0-b1d1ffed6cea"
+UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [compat]
 julia = "1.5"

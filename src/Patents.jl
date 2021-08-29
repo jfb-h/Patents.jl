@@ -1,36 +1,24 @@
 module Patents
 
-using LightGraphs
-using ZipFile
-using CSV
-using Dates
-using StatsBase
+using Statistics
 
-include("classification.jl")
-include("applicants.jl")
 include("applications.jl")
+include("classification.jl")
 include("families.jl")
-include("portfolios.jl")
-include("utils.jl")
+include("diversity.jl")
 
-export Application
-export id, title, abstract, classification, applicants
+export Application, ApplicationID, Title, Abstract, Classification, NPLCitation
 
-export Family
+export
+lensid, id, jurisdiction, status, docnr, kind, date,
+title, abstract, lang, text, 
+applicants, inventors,
+siblings, 
+classification, code, subgroup, maingroup, subclass, class, section,
+cites, cites_npl, cites_count, cites_count_npl, citedby, citedby_count
 
-export Applicant
-export name
+export Family, applications, jurisdictions, dates, earliest_filing
 
-export ClassificationCPC
-export symbols
-
-export SymbolCPC
-export level, label, code
-export parents, children, parents_recursive, children_recursive
-
-export prune
-
-export SubgroupCPC, MaingroupCPC, SubclassCPC, ClassCPC, SectionCPC
-
+export citationgraph, coclassification
 
 end

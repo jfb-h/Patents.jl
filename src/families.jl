@@ -1,7 +1,82 @@
-struct Family
-    id::Int
+using UUIDs
+
+mutable struct Family
+    id::UUID
+    size::Int
     applications::Vector{Application}
+    Family() = new(UUIDs.uuid4(), 0, Application[])
 end
 
-id(family::Family) = family.id
-applications(family::Family) = family.applications
+id(f::Family) = f.id
+applications(f::Family) = f.applications
+Base.size(f::Family) = f.size
+
+jurisdictions(f::Family) = unique(jurisdiction(a) for a in applications(f))
+dates(f::Family) = [date(a) for a in applications(f)]
+earliest_filing(f::Family) = minimum(dates(f))
+
+title(f::Family) = [title(a) for a in applications(f)]
+abstract(f::Family) = [abstract(a) for a in applications(f)]
+
+function applicants(f::Family) 
+    apps = applications(f)
+    appl = reduce(vcat, applicants.(apps))
+    return unique(appl)
+end
+
+function inventors(f::Family) 
+    apps = applications(f)
+    inv = reduce(vcat, inventors.(apps))
+    return unique(inv)
+end
+
+function classification(fam::Family)
+	apps = applications(fam)
+	class = reduce(vcat, classification.(apps))
+	return unique(class)
+end
+
+cites(f::Family) = reduce(vcat, cites(a) for a in applications(f)) |> unique
+cites_npl(f::Family) = reduce(vcat, cites_npl(a) for a in applications(f)) |> unique
+citedby(f::Family) = reduce(vcat, citedby(a) for a in applications(f)) |> unique
+
+function Base.show(io::IO, f::Family) 
+    print(io, "Family with $(f.size) members" )
+end
+
+function Base.summary(io::IO, f::Family)
+    tit = reduce(vcat, title.(applications(f)))
+    idx_tit = findfirst(lang.(tit) .== "en")
+    tit = isnothing(idx_tit) ? text(first(tit)) : text(tit[idx_tit])
+    abs = reduce(vcat, abstract.(applications(f)))
+    idx_abs = findfirst(lang.(abs) .== "en")
+    abs = isnothing(idx_abs) ? text(first(abs)) : text(abs[idx_abs])
+
+    println(io, "Size: $(f.size)")
+    println(io, "Earliest filing: $(earliest_filing(f))")
+    println(io, "Latest filing: $(maximum(dates(f)))")
+    println(io, "Cited by: $(citedby(f) |> length)")
+    println(io, "Filed in: $(join(jurisdictions(f), ", "))")
+    println(io, "Applicants: $(join(applicants(f), ", "))")
+    println(io, "-----------")
+    println(io, "Title: $tit\n")
+    println(io, "Abstract: $abs")
+end
+
+function aggregate_families(apps::Vector{Application})
+    visited = Dict(id(a) => false for a in apps)
+    idx = Dict(id(a) => i for (i, a) in enumerate(apps))
+    families = Family[]
+    for a in apps
+        visited[id(a)] && continue
+        applications = Application[]
+        push!(applications, a)
+        for s in siblings(a)
+            haskey(idx, id(s)) || continue
+            push!(applications, apps[idx[id(s)]])
+            visited[id(s)] = true
+        end
+        push!(families, Family(UUIDs.uuid4(), familysize(a), applications))
+    end
+    return families
+end
