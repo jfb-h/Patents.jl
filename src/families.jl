@@ -5,6 +5,7 @@ mutable struct Family
     size::Int
     applications::Vector{Application}
     Family() = new(UUIDs.uuid4(), 0, Application[])
+    Family(id, s, apps) = new(id, s, apps)
 end
 
 id(f::Family) = f.id
