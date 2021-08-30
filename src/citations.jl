@@ -55,6 +55,26 @@ function _earliest_filing_reference_citationcount(families)
     out
 end
 
+function _earliest_filing_reference_citationcount(g::AbstractGraph, families::Vector{Family})
+    ref = Dict{Int, Vector{Int}}()
+    for (i,f) in enumerate(families)
+        y = Dates.year(earliest_filing(f))
+        if haskey(ref, y)
+            push!(ref[y], outdegree(g, i))
+        else
+            push!(ref, y => [outdegree(g, i)])
+        end
+    end
+
+    out = Dict{Int, Float64}(keys(ref) .=> 0.0)
+    for x in ref
+        y = x[1]; cit = x[2]
+        out[y] = mean(cit)
+    end
+
+    out
+end
+
 """
     normalized_citations(families)
 
