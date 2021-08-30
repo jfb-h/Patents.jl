@@ -122,7 +122,6 @@ citedby_count(a::Application) = a.cited_by_count
 ==(a1::Application, a2::Application) = id(a1) == id(a2)
 hash(app::Application, h::UInt) = hash(id(app), h)
 
-
 function Base.show(io::IO, a::ApplicationID) 
     print(io, "$(id(a)) | $(date(a)) | $(jurisdiction(a) * docnr(a) * kind(a))" )
 end

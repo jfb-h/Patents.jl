@@ -1,6 +1,7 @@
 module Patents
 
 using Statistics
+import Base: ==, hash
 
 include("applications.jl")
 include("classification.jl")

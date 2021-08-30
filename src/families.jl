@@ -41,18 +41,27 @@ cites(f::Family) = reduce(vcat, cites(a) for a in applications(f)) |> unique
 cites_npl(f::Family) = reduce(vcat, cites_npl(a) for a in applications(f)) |> unique
 citedby(f::Family) = reduce(vcat, citedby(a) for a in applications(f)) |> unique
 
-function Base.show(io::IO, f::Family) 
+function Base.show(io::IO, f::Family)
     print(io, "Family with $(f.size) members" )
 end
 
-function Base.summary(io::IO, f::Family)
+function Base.show(io::IO, ::MIME"text/plain", f::Family)
     tit = reduce(vcat, title.(applications(f)))
-    idx_tit = findfirst(lang.(tit) .== "en")
-    tit = isnothing(idx_tit) ? text(first(tit)) : text(tit[idx_tit])
-    abs = reduce(vcat, abstract.(applications(f)))
-    idx_abs = findfirst(lang.(abs) .== "en")
-    abs = isnothing(idx_abs) ? text(first(abs)) : text(abs[idx_abs])
+    if length(tit) == 0
+        tit = ""
+    else
+        idx_tit = findfirst(lang.(tit) .== "en")
+        tit = isnothing(idx_tit) ? text(first(tit)) : text(tit[idx_tit])
+    end
 
+    abs = reduce(vcat, abstract.(applications(f)))
+    if length(abs) == 0
+        abs = ""
+    else
+        idx_abs = findfirst(lang.(abs) .== "en")
+        abs = isnothing(idx_abs) ? text(first(abs)) : text(abs[idx_abs])
+    end
+    
     println(io, "Size: $(f.size)")
     println(io, "Earliest filing: $(earliest_filing(f))")
     println(io, "Latest filing: $(maximum(dates(f)))")
@@ -63,6 +72,33 @@ function Base.summary(io::IO, f::Family)
     println(io, "Title: $tit\n")
     println(io, "Abstract: $abs")
 end
+
+# function Base.show(io::IO, ::MIME"text/plain", f::Family) 
+
+# end
+
+# function Base.show(io::IO, ::MIME"text/markdown", f::Family) 
+#     tit = reduce(vcat, title.(applications(f)))
+#     idx_tit = findfirst(lang.(tit) .== "en")
+#     tit = isnothing(idx_tit) ? text(first(tit)) : text(tit[idx_tit])
+#     abs = reduce(vcat, abstract.(applications(f)))
+#     idx_abs = findfirst(lang.(abs) .== "en")
+#     abs = isnothing(idx_abs) ? text(first(abs)) : text(abs[idx_abs])
+
+#     md"""
+#     ##### $tit
+    
+#     **Size:** $(f.size)
+#     **Earliest filing: $(earliest)
+#     **Earliest filing:** $(earliest_filing(f))
+#     **Latest filing:** $(maximum(dates(f)))
+#     **Cited by:** $(citedby(f) |> length)
+#     **Filed in:** $(join(jurisdictions(f), ", "))
+#     **Applicants:** $(join(applicants(f), ", "))
+#     ---
+#     **Abstract:** $abs
+#     """
+# end
 
 function aggregate_families(apps::Vector{Application})
     visited = Dict(id(a) => false for a in apps)
