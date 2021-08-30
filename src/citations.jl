@@ -1,3 +1,5 @@
+using LightGraphs
+
 function _make_familydict(families::Vector{Family})
     res = Dict{String, Int}()
     for (i, f) in enumerate(families)

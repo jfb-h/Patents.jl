@@ -5,6 +5,7 @@ using Statistics
 include("applications.jl")
 include("classification.jl")
 include("families.jl")
+include("citations.jl")
 include("diversity.jl")
 
 export Application, ApplicationID, Title, Abstract, Classification, NPLCitation
