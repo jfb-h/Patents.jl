@@ -48,7 +48,7 @@ function _earliest_filing_reference_citationcount(families)
 
     out = Dict{Int, Float64}(keys(ref) .=> 0.0)
     for x in ref
-        y = x[1], cit = x[2]
+        y = x[1]; cit = x[2]
         out[y] = mean(cit)
     end
 
@@ -64,6 +64,8 @@ mean citation count of all families in the collection with the same earliest fil
 function normalized_citations(families::Vector{Family})
     ref = _earliest_filing_reference_citationcount(families)
     map(families) do f
-        citedby_count(f) / ref[earliest_filing(f)]
+        count = citedby_count(f)
+        refcount = ref[Dates.year(earliest_filing(f))]
+        refcount == 0 ? 0.0 : count/refcount
     end
 end

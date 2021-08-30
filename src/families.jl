@@ -40,6 +40,20 @@ end
 cites(f::Family) = reduce(vcat, cites(a) for a in applications(f)) |> unique
 cites_npl(f::Family) = reduce(vcat, cites_npl(a) for a in applications(f)) |> unique
 citedby(f::Family) = reduce(vcat, citedby(a) for a in applications(f)) |> unique
+citedby_count(f::Family) = length(citedby(f))
+
+# function citedby_count(f::Family)
+#     res = Set{String}()
+#     count = 0
+#     for a in applications(f)
+#         for c in citedby(a)
+#             incr = ifelse(id(c) in res, 0, 1)
+#             push!(res, id(c))
+#             count += incr
+#         end
+#     end
+#     count
+# end
 
 function Base.show(io::IO, f::Family)
     print(io, "Family with $(f.size) members" )
@@ -61,7 +75,7 @@ function Base.show(io::IO, ::MIME"text/plain", f::Family)
         idx_abs = findfirst(lang.(abs) .== "en")
         abs = isnothing(idx_abs) ? text(first(abs)) : text(abs[idx_abs])
     end
-    
+
     println(io, "Size: $(f.size)")
     println(io, "Earliest filing: $(earliest_filing(f))")
     println(io, "Latest filing: $(maximum(dates(f)))")
