@@ -25,6 +25,10 @@ function citationgraph(families::Vector{Family})
 
     for (dst, f) in enumerate(families)
         for c in cites(f)
+            # Because we're following citations here, generally only
+            # all(cites_count.(fams) .< indegree(g)) will hold but normalized_citations
+            # necessarily all(citedby_count(fams) .< outdegree(g)) as apparently there
+            # can be references to f from other patents that not included in citedby(f).
             haskey(fdict, id(c)) || continue
             src = fdict[id(c)]
             earliest_filing(f) > earliest_filing(families[src]) || continue
@@ -33,59 +37,4 @@ function citationgraph(families::Vector{Family})
     end
 
     return g
-end
-
-function _earliest_filing_reference_citationcount(families)
-    ref = Dict{Int, Vector{Int}}()
-    for f in families
-        y = Dates.year(earliest_filing(f))
-        if haskey(ref, y)
-            push!(ref[y], citedby_count(f))
-        else
-            push!(ref, y => [citedby_count(f)])
-        end
-    end
-
-    out = Dict{Int, Float64}(keys(ref) .=> 0.0)
-    for x in ref
-        y = x[1]; cit = x[2]
-        out[y] = mean(cit)
-    end
-
-    out
-end
-
-function _earliest_filing_reference_citationcount(g::AbstractGraph, families::Vector{Family})
-    ref = Dict{Int, Vector{Int}}()
-    for (i,f) in enumerate(families)
-        y = Dates.year(earliest_filing(f))
-        if haskey(ref, y)
-            push!(ref[y], outdegree(g, i))
-        else
-            push!(ref, y => [outdegree(g, i)])
-        end
-    end
-
-    out = Dict{Int, Float64}(keys(ref) .=> 0.0)
-    for x in ref
-        y = x[1]; cit = x[2]
-        out[y] = mean(cit)
-    end
-
-    out
-end
-
-"""
-    normalized_citations(families)
-
-Compute the number of citations for all families in `families`, normalized relative to the
-mean citation count of all families in the collection with the same earliest filing year.
-"""
-function normalized_citations(families::Vector{Family})
-    ref = _earliest_filing_reference_citationcount(families)
-    map(families) do f
-        count = citedby_count(f)
-        refcount = ref[Dates.year(earliest_filing(f))]
-        refcount == 0 ? 0.0 : count/refcount
-    end
 end

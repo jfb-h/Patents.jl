@@ -1,6 +1,7 @@
 module Patents
 
 using Statistics
+using Dictionaries
 import Base: ==, hash
 
 include("applications.jl")
@@ -8,6 +9,8 @@ include("classification.jl")
 include("families.jl")
 include("citations.jl")
 include("diversity.jl")
+include("helpers.jl")
+include("mainpath.jl")
 
 export Application, ApplicationID, Title, Abstract, Classification, NPLCitation
 
