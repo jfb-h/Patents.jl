@@ -1,10 +1,76 @@
 
-findbranches(mp) = findall(outdegree(mp) .> 1)
+# findbranches(g) = begin
+# 	vs = findall(outdegree(g) .> 1)
+# 	idx = map(vs) do v
+# 		onb = outneighbors(g, v)
+# 		any(outdegree(g, onb) .> 0) && return true
+# 		return false
+# 	end
+# 	vs[idx]
+# end
 
-findmerges(mp) = findall(indegree(mp) .> 1)
+# findmerges(g) = begin
+# 	vs = findall(indegree(g) .> 1)
+# 	idx = map(vs) do v
+# 		onb = inneighbors(g, v)
+# 		any(indegree(g, onb) .> 0) && return true
+# 		return false
+# 	end
+# 	vs[idx]
+# end
 
-findjunctions(mp) = intersect(findbranches(mp), findmerges(mp))
+# findjunctions(mp) = intersect(findbranches(mp), findmerges(mp))
 
+
+function diversity(fams::Vector{Family}, levelfun)
+	class = classification.(fams) |> Iterators.flatten .|> levelfun
+	
+	# class = classification.(fams)
+	# class = map(class) do c
+	# 	cs = levelfun.(c)
+	# 	unique(cs)
+	# end
+	# class = Iterators.flatten(class) |> collect
+
+	n = length(class)
+    d = StatsBase.countmap(class)
+    s = 0.0
+    for v in values(d)
+        p = v/n
+        s += p * log(p)
+    end
+    -s
+end
+
+function orgdiversity(fams::Vector{Family})
+	apps = reduce(vcat, applicants.(fams))
+	n = length(apps)
+    d = StatsBase.countmap(apps)
+    s = 0.0
+    for v in values(d)
+        p = v/n
+        s += p * log(p)
+    end
+    -s
+end
+
+function share_same_applicant(fams::Vector{Family})
+	apps = reduce(vcat, applicants.(fams))
+    d = StatsBase.countmap(apps)
+    maximum(values(d)) / length(fams)
+end
+
+function jurdiversity(fams::Vector{Family})
+	apps = reduce(vcat, jurisdiction.(fams))
+	n = length(apps)
+	d = StatsBase.countmap(apps)
+	s = 0.0
+	for v in values(d)
+		p = v/n
+		s += p * log(p)
+	end
+	-s
+end
 
 function organizational_branching(mp, fam, v)
     focal = fam[v]
@@ -61,28 +127,32 @@ function branched_diversity_intersect(fams, net, v)
 	return length(intersect(cpc, citedcpc)) / length(union(cpc, citedcpc))
 end	
 
-function merge_scope(fams, net, v)
+function backward_diversity(fams, net, v; normalize=true)
 	fam = fams[v]
 	citedcpc = String[]
 	cited = inneighbors(net, v)
-	length(cited) == 0 && return nothing
+	length(cited) == 0 && return 0.0
 	for c in cited
-		append!(citedcpc, subgroup.(classification(fams[c])))
+		append!(citedcpc, section.(classification(fams[c])))
 	end
 	
-	return length(unique(citedcpc))
+	res = length(unique(citedcpc))
+	normalize && return res / length(cited)
+	return float.(res)
 end
 
-function branch_scope(fams, net, v)
+function forward_diversity(fams, net, v; normalize=true)
 	fam = fams[v]
 	citingcpc = String[]
 	citing = outneighbors(net, v)
-	length(citing) == 0 && return nothing
+	length(citing) == 0 && return 0.0
 	for c in citing
-		append!(citingcpc, subgroup.(classification(fams[c])))
+		append!(citingcpc, section.(classification(fams[c])))
 	end
 	
-	return length(unique(citingcpc))
+	res = length(unique(citingcpc))
+	normalize && return res / length(citing)
+	return float.(res)
 end
 
 function merge_mode(fams, net, v)

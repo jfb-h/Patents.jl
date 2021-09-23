@@ -12,9 +12,10 @@ id(f::Family) = f.id
 applications(f::Family) = f.applications
 Base.size(f::Family) = f.size
 
-jurisdictions(f::Family) = unique(jurisdiction(a) for a in applications(f))
+jurisdiction(f::Family) = unique(jurisdiction(a) for a in applications(f))
 dates(f::Family) = [date(a) for a in applications(f)]
 earliest_filing(f::Family) = minimum(dates(f))
+latest_filing(f::Family) = maximum(dates(f))
 
 title(f::Family) = [title(a) for a in applications(f)]
 abstract(f::Family) = [abstract(a) for a in applications(f)]
@@ -38,6 +39,7 @@ function classification(fam::Family)
 end
 
 cites(f::Family) = reduce(vcat, cites(a) for a in applications(f)) |> unique
+cites_count(f::Family) = length(cites(f))
 cites_npl(f::Family) = reduce(vcat, cites_npl(a) for a in applications(f)) |> unique
 citedby(f::Family) = reduce(vcat, citedby(a) for a in applications(f)) |> unique
 citedby_count(f::Family) = length(citedby(f))
@@ -76,13 +78,15 @@ function Base.show(io::IO, ::MIME"text/plain", f::Family)
         abs = isnothing(idx_abs) ? text(first(abs)) : text(abs[idx_abs])
     end
 
+    println(io, "----------------------")
     println(io, "Size: $(f.size)")
     println(io, "Earliest filing: $(earliest_filing(f))")
     println(io, "Latest filing: $(maximum(dates(f)))")
     println(io, "Cited by: $(citedby(f) |> length)")
-    println(io, "Filed in: $(join(jurisdictions(f), ", "))")
+    println(io, "Filed in: $(join(jurisdiction(f), ", "))")
     println(io, "Applicants: $(join(applicants(f), ", "))")
-    println(io, "-----------")
+    println(io, "Subgroups: $(join(subgroup.(classification(f)), ", "))")
+    println(io, "----------------------")
     println(io, "Title: $tit\n")
     println(io, "Abstract: $abs")
 end
@@ -107,7 +111,7 @@ end
 #     **Earliest filing:** $(earliest_filing(f))
 #     **Latest filing:** $(maximum(dates(f)))
 #     **Cited by:** $(citedby(f) |> length)
-#     **Filed in:** $(join(jurisdictions(f), ", "))
+#     **Filed in:** $(join(jurisdiction(f), ", "))
 #     **Applicants:** $(join(applicants(f), ", "))
 #     ---
 #     **Abstract:** $abs
