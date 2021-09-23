@@ -1,12 +1,15 @@
 using Patents
+using PatentsLens
 using LightGraphs
 using Test
 
-# apps = vcat(apps...) |> unique
-# fams = aggregate_families(apps)
-# g = citationgraph(fams)
+apps = PatentsLens.read("data/portfolio_carbios.jsonl")
+fams = aggregate_families(apps)
+g = citationgraph(fams)
 
 @testset "application" begin
+    @test apps isa Vector{Application}
+    @test fams isa Vector{Family}
 
 end
 
