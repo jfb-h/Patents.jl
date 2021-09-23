@@ -78,6 +78,12 @@ git-tree-sha1 = "bee5f1ef5bf65df56bdd2e40447590b272a5471f"
 uuid = "41ab1584-1d38-5bbf-9106-f11c6c58b48f"
 version = "1.1.0"
 
+[[JSON3]]
+deps = ["Dates", "Mmap", "Parsers", "StructTypes", "UUIDs"]
+git-tree-sha1 = "b3e5984da3c6c95bcf6931760387ff2e64f508f3"
+uuid = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+version = "1.9.1"
+
 [[LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
 uuid = "b27032c2-a3e7-50c8-80cd-2d36dbcbfd21"
@@ -158,6 +164,26 @@ git-tree-sha1 = "85f8e6578bf1f9ee0d11e7bb1b1456435479d47c"
 uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 version = "1.4.1"
 
+[[Parsers]]
+deps = ["Dates"]
+git-tree-sha1 = "9d8c00ef7a8d110787ff6f170579846f776133a9"
+uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
+version = "2.0.4"
+
+[[Patents]]
+deps = ["Dates", "Dictionaries", "LightGraphs", "MainPaths", "NamedArrays", "PatentsLens", "Requires", "SparseArrays", "SplitApplyCombine", "Statistics", "StatsBase", "UUIDs"]
+path = "C:\\Users\\Jakob\\heibox\\2019-2022 BioTexFuture BMBF\\04 TETRA\\01_dev\\Patents"
+uuid = "d01f8802-a735-4783-851a-d2cff8aa012a"
+version = "0.1.0"
+
+[[PatentsLens]]
+deps = ["Dates", "JSON3", "MainPaths", "Patents", "StructTypes"]
+git-tree-sha1 = "34b39e0c9faa88dc682e251d09bdd3fa8e7c4fc2"
+repo-rev = "main"
+repo-url = "https://github.com/jfb-h/PatentsLens.jl"
+uuid = "f4645b53-4539-42ef-9ea4-c70e89c10300"
+version = "0.1.0"
+
 [[Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
@@ -235,6 +261,12 @@ deps = ["DataAPI", "DataStructures", "LinearAlgebra", "Missings", "Printf", "Ran
 git-tree-sha1 = "8cbbc098554648c84f79a463c9ff0fd277144b6c"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 version = "0.33.10"
+
+[[StructTypes]]
+deps = ["Dates", "UUIDs"]
+git-tree-sha1 = "8445bf99a36d703a09c601f9a57e2f83000ef2ae"
+uuid = "856f2bd8-1eba-4b0a-8007-ebc267875bd4"
+version = "1.7.3"
 
 [[TOML]]
 deps = ["Dates"]

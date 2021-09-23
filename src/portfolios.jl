@@ -11,7 +11,7 @@ function Base.show(io::IO, p::Portfolio)
 end
 
 owner(p::Portfolio) = p.owner
-size(p::Portfolio) = length(p.families)
+Base.size(p::Portfolio) = length(p.families)
 families(p::Portfolio) = p.families
 
 function diversity(p::Portfolio, levelfun)
