@@ -97,6 +97,7 @@ id(a::Application) = id(a.id)
 jurisdiction(a::Application) = jurisdiction(a.id)
 docnr(a::Application) = docnr(a.id)
 kind(a::Application) = kind(a.id)
+nr(a::Application) = jurisdiction(a) * docnr(a) * kind(a)
 date(a::Application) = date(a.id)
 status(a::Application) = a.publication_type
 
