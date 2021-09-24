@@ -13,6 +13,7 @@ end
 owner(p::Portfolio) = p.owner
 Base.size(p::Portfolio) = length(p.families)
 families(p::Portfolio) = p.families
+applications(p::Portfolio) = reduce(vcat, applications.(families(p))) |> unique
 
 function diversity(p::Portfolio, levelfun)
     fams = families(p)
