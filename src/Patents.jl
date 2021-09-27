@@ -23,8 +23,8 @@ include("mainpath.jl")
 export Application, ApplicationID, Title, Abstract, Claims, Classification, NPLCitation
 
 export
-lensid, id, jurisdiction, status, docnr, kind, nr, date,
-title, abstract, lang, text, 
+lensid, id, jurisdiction, status, publicationtype, docnr, kind, nr, date,
+title, abstract, claims, lang, text, 
 applicants, inventors,
 siblings, 
 classification, code, subgroup, maingroup, subclass, class, section,

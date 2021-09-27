@@ -113,10 +113,11 @@ kind(a::Application) = kind(a.id)
 nr(a::Application) = jurisdiction(a) * docnr(a) * kind(a)
 date(a::Application) = date(a.id)
 status(a::Application) = a.status
-type(a::Application) = a.publication_type
+publicationtype(a::Application) = a.publication_type
 
 title(a::Application) = a.title
 abstract(a::Application) = a.abstract
+claims(a::Application) = a.claims
 
 inventors(a::Application) = a.inventors
 applicants(a::Application) = a.applicants
