@@ -24,6 +24,7 @@ mutable struct Claims
     text::Vector{String}
     lang::String
     Claims() = new(String[], "")
+    Claims(t, l) = new(t, l)
 end
 
 lang(t::Title) = t.lang
