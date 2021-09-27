@@ -20,7 +20,7 @@ include("mainpath.jl")
 #     @require PlotlyJS="" include("plotting.jl")
 # end
 
-export Application, ApplicationID, Title, Abstract, Classification, NPLCitation
+export Application, ApplicationID, Title, Abstract, Claims, Classification, NPLCitation
 
 export
 lensid, id, jurisdiction, status, docnr, kind, nr, date,

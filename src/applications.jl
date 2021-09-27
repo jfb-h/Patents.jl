@@ -20,11 +20,20 @@ mutable struct Abstract
     Abstract() = new("", "")
 end
 
+mutable struct Claims
+    text::Vector{String}
+    lang::String
+    Claim() = new(String[], "")
+end
+
 lang(t::Title) = t.lang
 text(t::Title) = t.text
 
 lang(t::Abstract) = t.lang
 text(t::Abstract) = t.text
+
+lang(t::Claims) = t.lang
+text(t::Claims) = t.text
 
 mutable struct Classification
     symbol::String
@@ -66,11 +75,13 @@ hash(app::ApplicationID, h::UInt) = hash(id(app), h)
 
 mutable struct Application
     id::ApplicationID
+    status::String
     publication_type::String
     inventors::Vector{String}
     applicants::Vector{String}
     title::Vector{Title}
     abstract::Vector{Abstract}
+    claims::Vector{Claims}
     cpc::Vector{Classification}
     siblings_simple::Vector{ApplicationID}
     cites_patents::Vector{ApplicationID}
@@ -80,14 +91,15 @@ mutable struct Application
     cites_patents_count::Int
     cites_npl_count::Int
     cited_by_count::Int
-    Application() = new(ApplicationID(), "", [""], [""], Title[], Abstract[], 
+    Application() = new(ApplicationID(), "", "", String[], String[], 
+                        Title[], Abstract[], Claims[],
                         Classification[], ApplicationID[], ApplicationID[], 
                         NPLCitation[], ApplicationID[], 0, 0, 0, 0)
     
-    Application(id, typ, inv, app, tit, abs, cpc, fam, cit, npl, 
+    Application(id, stat, typ, inv, app, tit, abs, claim, cpc, fam, cit, npl, 
                 citby, fsize, citcount, citcountnpl, citbycount) = begin
         
-        new(id, typ, inv, app, tit, abs, cpc, fam, cit, npl, 
+        new(id, stat, typ, inv, app, tit, abs, claim, cpc, fam, cit, npl, 
             citby, fsize, citcount, citcountnpl, citbycount
         )
     end
@@ -99,7 +111,8 @@ docnr(a::Application) = docnr(a.id)
 kind(a::Application) = kind(a.id)
 nr(a::Application) = jurisdiction(a) * docnr(a) * kind(a)
 date(a::Application) = date(a.id)
-status(a::Application) = a.publication_type
+status(a::Application) = a.status
+type(a::Application) = a.publication_type
 
 title(a::Application) = a.title
 abstract(a::Application) = a.abstract
