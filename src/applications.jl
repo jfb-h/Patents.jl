@@ -23,7 +23,7 @@ end
 mutable struct Claims
     text::Vector{String}
     lang::String
-    Claim() = new(String[], "")
+    Claims() = new(String[], "")
 end
 
 lang(t::Title) = t.lang
