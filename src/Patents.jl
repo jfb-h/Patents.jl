@@ -3,7 +3,7 @@ module Patents
 using Statistics
 using StatsBase
 using Dictionaries
-using LightGraphs
+using Graphs
 using Requires
 import Base: ==, hash
 

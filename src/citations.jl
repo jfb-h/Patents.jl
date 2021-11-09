@@ -1,4 +1,4 @@
-using LightGraphs
+using Graphs
 
 function _make_familydict(families::Vector{Family})
     res = Dict{String, Int}()

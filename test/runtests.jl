@@ -1,6 +1,6 @@
 using Patents
 using PatentsLens
-using LightGraphs
+using Graphs
 using Test
 
 apps = PatentsLens.read("data/portfolio_carbios.jsonl")
