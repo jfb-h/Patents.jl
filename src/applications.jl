@@ -115,8 +115,20 @@ date(a::Application) = date(a.id)
 status(a::Application) = a.status
 publicationtype(a::Application) = a.publication_type
 
-title(a::Application) = a.title
-abstract(a::Application) = a.abstract
+title(a::Application) = length(a.title) == 0 ? nothing : first(a.title).text
+
+function title(a::Application, lang::String)
+	i = findfirst(t -> t.lang == lang, a.title)
+	return isnothing(i) ? nothing : a.title[i].text
+end
+
+abstract(a::Application) = length(a.abstract) == 0 ? nothing : first(a.abstract).text
+
+function abstract(a::Application, lang::String)
+	i = findfirst(t -> t.lang == lang, a.abstract)
+	return isnothing(i) ? nothing : a.abstract[i].text
+end
+
 claims(a::Application) = a.claims
 
 inventors(a::Application) = a.inventors

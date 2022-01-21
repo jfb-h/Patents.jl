@@ -18,7 +18,20 @@ earliest_filing(f::Family) = minimum(dates(f))
 latest_filing(f::Family) = maximum(dates(f))
 
 title(f::Family) = [title(a) for a in applications(f)]
+
+function title(f::Family, lang::String)
+    a = applications(f)
+    i = findfirst(x -> !isnothing(title(x, lang)), a)
+    return isnothing(i) ? nothing : title(a[i], lang)
+end
+
 abstract(f::Family) = [abstract(a) for a in applications(f)]
+
+function abstract(f::Family, lang::String)
+    a = applications(f)
+    i = findfirst(x -> !isnothing(abstract(x, lang)), a)
+    return isnothing(i) ? nothing : abstract(a[i], lang)
+end
 
 function applicants(f::Family) 
     apps = applications(f)
