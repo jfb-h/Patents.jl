@@ -24,7 +24,7 @@ export Application, ApplicationID, Title, Abstract, Claims, Classification, NPLC
 
 export
 lensid, id, jurisdiction, status, publicationtype, docnr, kind, nr, date,
-title, abstract, claims, lang, text, 
+title, titles, abstract, abstracts, claims, lang, text, 
 applicants, inventors,
 siblings, 
 classification, code, subgroup, maingroup, subclass, class, section,

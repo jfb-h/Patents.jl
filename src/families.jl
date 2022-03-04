@@ -17,7 +17,7 @@ dates(f::Family) = [date(a) for a in applications(f)]
 earliest_filing(f::Family) = minimum(dates(f))
 latest_filing(f::Family) = maximum(dates(f))
 
-title(f::Family) = [title(a) for a in applications(f)]
+titles(f::Family) = [title(a) for a in applications(f)]
 
 function title(f::Family, lang::String)
     a = applications(f)
@@ -25,7 +25,7 @@ function title(f::Family, lang::String)
     return isnothing(i) ? nothing : title(a[i], lang)
 end
 
-abstract(f::Family) = [abstract(a) for a in applications(f)]
+abstracts(f::Family) = [abstract(a) for a in applications(f)]
 
 function abstract(f::Family, lang::String)
     a = applications(f)
@@ -75,22 +75,11 @@ function Base.show(io::IO, f::Family)
 end
 
 function Base.show(io::IO, ::MIME"text/plain", f::Family)
-    tit = reduce(vcat, title.(applications(f)))
-    if length(tit) == 0
-        tit = ""
-    else
-        idx_tit = findfirst(lang.(tit) .== "en")
-        tit = isnothing(idx_tit) ? text(first(tit)) : text(tit[idx_tit])
-    end
-
-    abs = reduce(vcat, abstract.(applications(f)))
-    if length(abs) == 0
-        abs = ""
-    else
-        idx_abs = findfirst(lang.(abs) .== "en")
-        abs = isnothing(idx_abs) ? text(first(abs)) : text(abs[idx_abs])
-    end
-
+    tit = title(f, "en")
+    tit = isnothing(tit) ? first(titles(f)) : tit
+    abs = abstract(f, "en")
+    abs = isnothing(abs) ? first(abstracts(f)) : abs
+    
     println(io, "----------------------")
     println(io, "Size: $(f.size)")
     println(io, "Earliest filing: $(earliest_filing(f))")
