@@ -20,7 +20,7 @@ include("mainpath.jl")
 #     @require PlotlyJS="" include("plotting.jl")
 # end
 
-export Application, ApplicationID, Title, Abstract, Claims, Classification, NPLCitation
+export AbstractApplication, Application, ApplicationID, Title, Abstract, Claims, Classification, NPLCitation
 
 export
 lensid, id, jurisdiction, status, publicationtype, docnr, kind, nr, date,
@@ -30,7 +30,7 @@ siblings,
 classification, code, subgroup, maingroup, subclass, class, section,
 cites, cites_npl, cites_count, cites_count_npl, citedby, citedby_count
 
-export Family, applications, jurisdictions, dates, earliest_filing, 
+export AbstractFamily, Family, applications, jurisdictions, dates, earliest_filing, 
 latest_filing, aggregate_families
 
 export Portfolio, diversity, owner, families

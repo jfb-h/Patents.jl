@@ -74,7 +74,9 @@ date(a::ApplicationID) = a.date
 ==(a1::ApplicationID, a2::ApplicationID) = id(a1) == id(a2)
 hash(app::ApplicationID, h::UInt) = hash(id(app), h)
 
-mutable struct Application
+abstract type AbstractApplication end
+
+mutable struct Application <: AbstractApplication
     id::ApplicationID
     status::String
     publication_type::String

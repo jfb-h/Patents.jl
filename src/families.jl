@@ -1,6 +1,8 @@
 using UUIDs
 
-mutable struct Family
+abstract type AbstractFamily end
+
+mutable struct Family <: AbstractFamily
     id::UUID
     size::Int
     applications::Vector{Application}
